@@ -1,0 +1,25 @@
+{
+  "visDeForme": {
+    "17": "Montant mal saisi",
+    "23": "Manque endos",
+    "30": "Signature manquante",
+    "32": "Mentions obligatoires manquantes",
+    "33": "Signtatures non conforme",
+    "36": "Valeur mal presentee",
+    "37": "Endossement irregulier"
+  },
+  "inexploitable": {
+    "14": "Cheque inferieur 20 DINARS",
+    "15": "Prob de prov sur un cheque sur soi mm",
+    "20": "Titulaire du compte",
+    "21": "Donnes mal saisies",
+    "22": "Manque empreinte scanner/Cachet BQ",
+    "25": "Image non exploitable",
+    "31": "Valeur prescrite",
+    "35": "Absence de signature",
+    "38": "Valeur contrefaite",
+    "39": "Valeur mal acheminee",
+    "43": "Valeur deja reglee",
+    "44": "Valeur deja rejeter"
+  }
+}
