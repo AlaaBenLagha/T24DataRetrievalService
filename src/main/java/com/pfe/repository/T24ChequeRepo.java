@@ -14,6 +14,8 @@ public interface T24ChequeRepo extends JpaRepository<T24Cheque, String> {
 	
 	 T24Cheque findByRibTireur(String ribTireur);
 	 
+	 
+	
 	
 	    @Query("SELECT t.ribTireur FROM T24Cheque t WHERE t.id = :id")
 	    String findRibTireurById(@Param("id") String id);

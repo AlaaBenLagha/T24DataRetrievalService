@@ -8,10 +8,10 @@ public interface T24ChequeInterface {
 
 
 	Map<String, Map<String, String>> getDecisionData();
-
+	public T24Cheque setSelected(String id, boolean selected);
 	List<T24Cheque> getListChequeFromT24(String t24today) throws Exception;
 	T24Cheque getOneChequeFromT24(String t24today, String idCheque) throws Exception;
-	public void updateSelectedStatus(String id, boolean isSelected);
+	public T24Cheque updateSelectedStatus(String id, boolean isSelected);
 	void save(T24Cheque cheque);
 	public String getRibTireurById(String id);
 	T24Cheque findById(String id);

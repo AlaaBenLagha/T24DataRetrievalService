@@ -1,40 +1,28 @@
 package com.pfe.controller;
 
 
-import java.io.IOException;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
-
 import com.pfe.exceptions.NoDataException;
 import com.pfe.model.T24Cheque;
 import com.pfe.sInterface.T24ChequeInterface;
-import com.pfe.service.T24ChequeService;
-import com.pfe.tools.T24Connector;
+
 
 
 @SpringBootApplication
@@ -49,6 +37,7 @@ public class T24ChequeController {
 	@Autowired
     private T24ChequeInterface t24ChequeServiceI;
 	
+
 
 	
 	
@@ -69,11 +58,14 @@ public class T24ChequeController {
 	
 	
 	@PutMapping("/select/{id}")
-    public void updateIsSelectedStatus(@PathVariable String id, @RequestBody Map<String, Boolean> payload) {
-        boolean isSelected = payload.get("isSelected");
-        t24ChequeServiceI.updateSelectedStatus(id, isSelected);
+	public T24Cheque updateIsSelectedStatus(@PathVariable String id, @RequestBody Map<String, Boolean> payload) {
+	    boolean isSelected = payload.get("isSelected");
+	    T24Cheque updatedCheque = t24ChequeServiceI.setSelected(id, isSelected);
+	    
+	   
         
-    }
+        return updatedCheque;
+	}
 	
 	
 	
@@ -114,6 +106,25 @@ public class T24ChequeController {
     
     
     
+
+    @GetMapping("/decisionReasons")
+    public ResponseEntity<Map<String, Map<String, String>>> getDecisionReasons() {
+        try {
+          
+            Map<String, Map<String, String>> decisions = t24ChequeServiceI.getDecisionData();
+            
+            return new ResponseEntity<>(decisions, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Unable to load decision reasons", e);
+            return new ResponseEntity<>(new HashMap<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    
+    
+    
+    
+    
     @GetMapping("/{t24today}/{idCheque}")
     public ResponseEntity<T24Cheque> getOneChequeFromT24(@PathVariable("t24today") String t24today, 
             @PathVariable("idCheque") String idCheque) {
@@ -139,18 +150,6 @@ public class T24ChequeController {
 
 
 
-    @GetMapping("/decisionReasons")
-    public ResponseEntity<Map<String, Map<String, String>>> getDecisionReasons() {
-        try {
-          
-            Map<String, Map<String, String>> decisions = t24ChequeServiceI.getDecisionData();
-            
-            return new ResponseEntity<>(decisions, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error("Unable to load decision reasons", e);
-            return new ResponseEntity<>(new HashMap<>(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
     
     
     
@@ -173,12 +172,15 @@ public class T24ChequeController {
 //        try {
 //            T24Cheque t24Cheque = t24ChequeServiceI.getOneChequeFromT24(t24today, idCheque);
 //            return new ResponseEntity<>(t24Cheque, HttpStatus.OK);
-//        } catch (NoDataException e) {
+//        } catch (NoDataExceptifon e) {
 //            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //        } catch (Exception e) {
 //            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 //        }
 //    }
+    
+    
+ 
 
 
 

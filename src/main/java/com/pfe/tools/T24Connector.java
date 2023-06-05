@@ -1,6 +1,5 @@
 package com.pfe.tools;
 
-import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pfe.dto.T24ChqResponse;
