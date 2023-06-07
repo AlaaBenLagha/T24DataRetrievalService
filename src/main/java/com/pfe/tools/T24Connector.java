@@ -1,13 +1,18 @@
 package com.pfe.tools;
 
 
+
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pfe.dto.T24ChqResponse;
 import com.pfe.exceptions.NoDataException;
 import com.pfe.model.T24Cheque;
 
+
 //@Component
 public class T24Connector {
+	
+
 	
 
 	public String getHttpPost(String requestStr) {
@@ -38,8 +43,10 @@ public class T24Connector {
 	    if (map.getData() != null) {
 	        
 	        for (T24Cheque t24Cheque : map.getData().getRecord()) {
+	        		
 	        	
-	            if (t24Cheque.getId().equals(checkID) && t24Cheque.getDateImgNew().equals(t24today)) {
+	        	
+	            if (t24Cheque.getId().equals(checkID) && t24Cheque.getDateImgNewTC().equals(t24today)) {
 	                return t24Cheque;
 	            }
 	        }
@@ -73,9 +80,7 @@ public class T24Connector {
 	        + "\"visDeForme\": [],"
 	        + "\"ftDesionPai\": \"\","
 	        + "\"valConsultee\": \"YES\","
-	        + "\"dateImg\": \"2023-05-26\","
-	        + "\"numCpt\": \"890990 \","
-	        + "\"ribTireur\": \"25043000000089099070\""
+	        + "\"dateImg\": \"2023-05-26\""
 	        + "},"
 	        + "{"
 	        //new
@@ -100,9 +105,7 @@ public class T24Connector {
 	        + "\"visDeForme\": [],"
 	        + "\"ftDesionPai\": \"\","
 	        + "\"valConsultee\": \"\","
-	        + "\"dateImg\": \"2023-04-28\","
-	        + "\"numCpt\": \"891000 \","
-	        + "\"ribTireur\": \"25043100000089100071\""
+	        + "\"dateImg\": \"2023-04-28\""
 	        + "},"
 	        + "{"
 	        + "\"id\": \"20230526400035525043200000089101072\","
@@ -126,9 +129,7 @@ public class T24Connector {
 	        + "\"visDeForme\": [],"
 	        + "\"ftDesionPai\": \"\","
 	        + "\"valConsultee\": \"YES\","
-	        + "\"dateImg\": \"2023-04-29\","
-	        + "\"numCpt\": \"891010 \","
-	        + "\"ribTireur\": \"25043200000089101072\""
+	        + "\"dateImg\": \"2023-04-29\""
 	        + "},"
 	        + "{"
 	        + "\"id\": \"20230526400033425043400000089103074\","
@@ -152,9 +153,7 @@ public class T24Connector {
 	        + "\"visDeForme\": [],"
 	        + "\"ftDesionPai\": \"\","
 	        + "\"valConsultee\": \"\","
-	        + "\"dateImg\": \"2023-04-31\","
-	        + "\"numCpt\": \"891030 \","
-	        + "\"ribTireur\": \"25043400000089103074\""
+	        + "\"dateImg\": \"2023-04-31\""
 	        + "},"
 	        + "{"
 	        + "\"id\": \"20230526400032425043500000089104075\","
@@ -178,9 +177,7 @@ public class T24Connector {
 	        + "\"visDeForme\": [],"
 	        + "\"ftDesionPai\": \"\","
 	        + "\"valConsultee\": \"\","
-	        + "\"dateImg\": \"2023-05-01\","
-	        + "\"numCpt\": \"891040 \","
-	        + "\"ribTireur\": \"25043500000089104075\""
+	        + "\"dateImg\": \"2023-05-01\""
 	        + "}"
 	        + "]";
 	}

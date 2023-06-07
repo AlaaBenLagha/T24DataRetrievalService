@@ -10,7 +10,7 @@ public interface T24ChequeInterface {
 	Map<String, Map<String, String>> getDecisionData();
 	public T24Cheque setSelected(String id, boolean selected);
 	List<T24Cheque> getListChequeFromT24(String t24today) throws Exception;
-	T24Cheque getOneChequeFromT24(String t24today, String idCheque) throws Exception;
+
 	public T24Cheque updateSelectedStatus(String id, boolean isSelected);
 	void save(T24Cheque cheque);
 	public String getRibTireurById(String id);
@@ -19,9 +19,16 @@ public interface T24ChequeInterface {
 	public List<String> getSignaturePaths(String id);
 	
 	List<T24Cheque> getAllCheques();
+
 	
+	
+	
+	
+	
+	
+	
+	T24Cheque getOneChequeFromT24(String t24today, String idCheque) throws Exception;
 //	T24Cheque save(T24Cheque t24Cheque);
-//
 //	List<T24Cheque> getAllCheques();
 //	void watchFileAndSaveJsonData() throws IOException, InterruptedException;
 //	void readAndSaveJsonData() throws IOException;

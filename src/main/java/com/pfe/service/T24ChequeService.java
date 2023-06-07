@@ -1,6 +1,8 @@
 package com.pfe.service;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +45,9 @@ public class T24ChequeService implements T24ChequeInterface {
 	
 	@Autowired
 	private SimpMessagingTemplate template;
+
+
+	public Integer numberChequeLoaded = 0;
 	
 	
 	//optimse
@@ -51,8 +56,8 @@ public class T24ChequeService implements T24ChequeInterface {
 	
 	
 	
-	private int numberChequeLoaded;
-
+		@Autowired
+		private DictionaryProvider dictionaryProvider;
 	
 	
 	
@@ -166,12 +171,12 @@ public class T24ChequeService implements T24ChequeInterface {
 	 
 
 	 // getListChequeFromT24  ( check deprecation for visedeforme later )
+	@SuppressWarnings("deprecation")
 	public List<T24Cheque> getListChequeFromT24(String t24today) throws Exception {
 	    logger.info("************getListChequeFromT24*****************");
 	    List<T24Cheque> listT24Chq = new ArrayList<T24Cheque>();
 
 	    String requestStr = ",NOFILE.GET.CHEQUE,DATE:EQ=" + t24today;
-
 	    String t24resp;
 	    try {
 	        
@@ -187,6 +192,7 @@ public class T24ChequeService implements T24ChequeInterface {
 
 	        if (map.getData() != null) {
 	            List<T24Cheque> allCheques = map.getData().getRecord();
+	            int count = 0;
 	            for (T24Cheque t24Cheque : allCheques) {
 	                // Check if a cheque with the same ID already exists in the database
 	                if (findById(t24Cheque.getId()) == null) {
@@ -194,17 +200,103 @@ public class T24ChequeService implements T24ChequeInterface {
 	                    listT24Chq.add(t24Cheque);
 
 	                    if (t24Cheque.getCodeRemettant().trim().equals("25")) {
-	                        String dateImage = t24Cheque.getDateOperation().trim();
+	                    	
+	                        String dateImage = t24Cheque.getDateOperation();
+	                        
+	                        //old version  t24Cheque.setDateImg(dateImage.substring(6, 8) + dateImage.substring(4, 6) + dateImage.substring(0, 4)); return 20-2352 ??
+	                        String[] splitDate = dateImage.split("-");
+	                        if(splitDate.length == 3){
+	            	            if(splitDate[0].length() == 4 && splitDate[1].length() == 2 && splitDate[2].length() == 2){
+	            	                DateTimeFormatter oldFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	            	                DateTimeFormatter newFormat = DateTimeFormatter.ofPattern("yyyyMMdd");
+	            	                LocalDate date = LocalDate.parse(dateImage, oldFormat);
+	            	                t24Cheque.setDateImg(date.format(newFormat));
+	            	            }else{
+	            	                throw new IllegalArgumentException("dateOperation does not match the expected format yyyy-MM-dd. It is: " + dateImage);
+	            	            }
+	                        }
 
-	                        t24Cheque.setDateImg(dateImage.substring(6, 8) + dateImage.substring(4, 6) + dateImage.substring(0, 4));
+	                     
+	
+	                        
+	                        
 	                    }
+	                    
+	                    if (t24Cheque.getId().trim().length()== 35) {
+	                    	
+	                    		String id = t24Cheque.getId();
+	                    		String ribtireur = id.substring(15, 35);
+	                    		
+	                    		
+	                         	t24Cheque.setCMC7(id.substring(8, 35));
+			        	        t24Cheque.setNumChq(id.substring(8, 15));
+			        	        t24Cheque.setRibTireur(ribtireur);
+			        	        t24Cheque.setNumCpt(id.substring(27, 33));
+			        	        
+			        	        t24Cheque.setCheckSignatureReference(ribtireur.substring(8, 18));
+	           			
+	                    }
+	                    t24Cheque.setDateImgNew(t24Cheque.getDateImgNewTC());
+	                    
+	                   
 
-	                    // Continue with the rest of the method...
-	                    // Your previous method implementation
-	                }
+	                    String CONSULTEE = t24Cheque.getValConsultee();
+	        	        if (CONSULTEE.equals("YES")) {
+	        	            t24Cheque.setViewed(true);
+	        	        }
+	        	        //for testing
+	        	     
+
+	        	        String[] intInex;
+	        	        Integer[] inexploitableTab = { 99, 99, 99, 99 };
+	        	        boolean[] inexploitableTabVerrou = { false, false, false, false };
+	        	        intInex = t24Cheque.getInexploitableString().trim().split(" ");
+
+	        	        for (int i = 0; i < intInex.length; i++) {
+	        	            if (i < 4 && !intInex[i].trim().isEmpty()) {
+	        	                logger.info(t24Cheque.getId() + ": -- intInex[i]: " + intInex[i]);
+	        	                try {
+	        	                    inexploitableTab[i] = new Integer(intInex[i].trim());
+	        	                    inexploitableTabVerrou[i] = true;
+	        	                } catch (Exception e) {
+	        	                    e.printStackTrace();
+	        	                }
+	        	            }
+	        	        }
+
+	        	        String[] intVice;
+	        	        Integer[] viceDeformeTab = { 99, 99, 99, 99 };
+	        	        boolean[] viceDeformeTabVerrou = { false, false, false, false };
+	        	        
+	        	        if (t24Cheque.getViseDeformeString() != null && !t24Cheque.getViseDeformeString().isEmpty()) {
+	        	            intVice = t24Cheque.getViseDeformeString().trim().split(" ");
+	        	            for (int i = 0; i < intVice.length; i++) {
+	        	                if (intVice[i] != "" && !intVice[i].trim().isEmpty()) {
+	        	                    logger.info(t24Cheque.getId() + ": -- intVice[i]: " + intVice[i]);
+	        	                    try {
+	        	                        viceDeformeTab[i] = new Integer(intVice[i]);
+	        	                        viceDeformeTabVerrou[i] = true;
+	        	                    } catch (Exception e) {
+	        	                        e.printStackTrace();
+	        	                    }
+	        	                }
+	        	            }
+	        	        }
+	        	        
+	        	        
+	        	        t24Cheque.setInexpoitable(inexploitableTab);
+	        	        t24Cheque.setInexpoitableVerrou(inexploitableTabVerrou);
+	        	        t24Cheque.setVisDeForme(viceDeformeTab);
+	        	        t24Cheque.setVisDeFormeVerrou(viceDeformeTabVerrou);
+	        	        t24Cheque.setViceDeFormeSelectedItems(DictionaryProvider.getViseDeFormeDictionary(t24Cheque.getCodeVal().trim()));
+	        	        t24Cheque.setInexploitabeleSelectedItems(dictionaryProvider.getInexploitableDictionary(t24Cheque.getCodeVal().trim()));
+
+	        	    	this.numberChequeLoaded = count;
+	        	   
+
+	                  }
+					}
 	            }
-	        }
-
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
@@ -285,9 +377,9 @@ public class T24ChequeService implements T24ChequeInterface {
 	        t24Cheque.setVisDeForme(viceDeformeTab);
 	        t24Cheque.setVisDeFormeVerrou(viceDeformeTabVerrou);
 	        t24Cheque.setViceDeFormeSelectedItems(DictionaryProvider.getViseDeFormeDictionary(t24Cheque.getCodeVal().trim()));
-	        t24Cheque.setInexploitabeleSelectedItems(DictionaryProvider.getInexploitableDictionary(t24Cheque.getCodeVal().trim()));
+	        t24Cheque.setInexploitabeleSelectedItems(dictionaryProvider.getInexploitableDictionary(t24Cheque.getCodeVal().trim()));
 
-	        this.numberChequeLoaded = 1;
+
 	        
 	    
 	   
@@ -302,8 +394,8 @@ public class T24ChequeService implements T24ChequeInterface {
 	 public Map<String, Map<String, String>> getDecisionData() {
 		    Map<String, Map<String, String>> decisions = new HashMap<>();
 		    
-		    List<SelectItemDTO> visDeForme = DictionaryProvider.getViseDeFormeDictionary();
-		    List<SelectItemDTO> inexploitable = DictionaryProvider.getInexploitableDictionary();
+		    List<SelectItemDTO> visDeForme = dictionaryProvider.getViseDeFormeDictionary();
+		    List<SelectItemDTO> inexploitable = dictionaryProvider.getInexploitableDictionary();
 		    
 		    Map<String, String> visDeFormeMap = visDeForme.stream()
 		            .collect(Collectors.toMap(SelectItemDTO::getLabel, SelectItemDTO::getValue));

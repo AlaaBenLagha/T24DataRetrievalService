@@ -6,13 +6,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.Service;
+
 import com.pfe.dto.SelectItemDTO;
 
+@Service
 public class DictionaryProvider {
 	
 	
 	
 	
+	@SuppressWarnings("serial")
 	private static final Map<String, String> visDeForme = new HashMap<String, String>() {{
         put("17", "Montant mal saisi");
         put("23", "Manque endos");
@@ -23,7 +27,8 @@ public class DictionaryProvider {
         put("37", "Endossement irregulier");
     }};
 
-    private static final Map<String, String> inexploitable = new HashMap<String, String>() {{
+    @SuppressWarnings("serial")
+	private static final Map<String, String> inexploitable = new HashMap<String, String>() {{
         put("14", "Cheque inferieur 20 DINARS");
         put("15", "Prob de prov sur un cheque sur soi mm");
         put("20", "Titulaire du compte");
@@ -38,25 +43,39 @@ public class DictionaryProvider {
         put("44", "Valeur deja rejeter");
     }};
 
+    
+    // take the key "CodeVal" as input return value "the text related to the key"
+    
+    //ViseDeForme
     public static List<SelectItemDTO> getViseDeFormeDictionary(String code) {
         return Arrays.stream(code.split(" "))
                 .map(codeKey -> new SelectItemDTO(codeKey, visDeForme.get(codeKey)))
                 .collect(Collectors.toList());
     }
-
-    public static List<SelectItemDTO> getInexploitableDictionary(String code) {
-        return Arrays.stream(code.split(" "))
-                .map(codeKey -> new SelectItemDTO(codeKey, inexploitable.get(codeKey)))
-                .collect(Collectors.toList());
-    }
     
-    public static List<SelectItemDTO> getViseDeFormeDictionary() {
+   
+    
+    //inexploitable
+  public List<SelectItemDTO> getInexploitableDictionary(String code) {
+  return Arrays.stream(code.split(" "))
+          .map(codeKey -> new SelectItemDTO(codeKey, inexploitable.get(codeKey)))
+          .collect(Collectors.toList());
+}
+    
+    
+    public List<SelectItemDTO> getViseDeFormeDictionary() {
         return visDeForme.entrySet().stream()
                 .map(entry -> new SelectItemDTO(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
     }
+    
+    
 
-    public static List<SelectItemDTO> getInexploitableDictionary() {
+
+    
+ 
+
+    public List<SelectItemDTO> getInexploitableDictionary() {
         return inexploitable.entrySet().stream()
                 .map(entry -> new SelectItemDTO(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());

@@ -310,9 +310,7 @@ public class T24Cheque{
 		this.dateImg = dateImg;	}
 
 
-	public String getNumCpt() {
-		return numCpt;
-	}
+
 
 
 	public void setNumCpt(String numCpt) {
@@ -320,9 +318,6 @@ public class T24Cheque{
 	}
 
 
-	public String getRibTireur() {
-		return ribTireur;
-	}
 
 
 	public void setRibTireur(String ribTireur) {
@@ -398,16 +393,14 @@ public class T24Cheque{
 		this.notifChq = notifChq;
 	}
 
-	public String getNumChq() {
-		return numChq = id.substring(8, 15);
-    };
+
 	
 
 	public void setNumChq(String numChq) {
 		this.numChq = numChq;
 	}
 
-	public String getDateImgNew() {
+	public String getDateImgNewTC() {
 	    if (this.dateOperation != null && !this.dateOperation.isEmpty()) {
 	        String[] splitDate = this.dateOperation.split("-");
 	        if(splitDate.length == 3){
@@ -427,14 +420,7 @@ public class T24Cheque{
 	}
 
 	
-	
 
-	
-	
-	
-
-	
-	
 	
 	public void setPathSignature(String pathSignature) {
 		this.pathSignature = pathSignature;
@@ -462,17 +448,12 @@ public class T24Cheque{
 		this.refSignature = refSignature;
 	}
 
-	public String getCMC7() {
-		return CMC7 = id.substring(8, 35);
-	}
 
 	public void setCMC7(String cMC7) {
 		CMC7 = cMC7;
 	}
 
-	public String getCheckSignatureReference() {
-		return checkSignatureReference = ribTireur.substring(8, 18);
-	}
+
 
 	public void setCheckSignatureReference(String checkSignatureReference) {
 		this.checkSignatureReference = checkSignatureReference;
@@ -480,6 +461,30 @@ public class T24Cheque{
 
 	public String getPathSignature() {
 		return pathSignature;
+	}
+
+	public String getNumCpt() {
+		return numCpt;
+	}
+
+	public String getRibTireur() {
+		return ribTireur;
+	}
+
+	public String getNumChq() {
+		return numChq;
+	}
+
+	public String getCMC7() {
+		return CMC7;
+	}
+
+	public String getCheckSignatureReference() {
+		return checkSignatureReference;
+	}
+
+	public String getDateImgNew() {
+		return dateImgNew;
 	}
 	
 	
