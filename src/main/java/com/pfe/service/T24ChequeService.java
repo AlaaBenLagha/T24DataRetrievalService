@@ -27,8 +27,8 @@ import com.pfe.dictionary.DictionaryProvider;
 import com.pfe.dto.ImageData;
 import com.pfe.dto.ImageRef;
 import com.pfe.dto.ImageResponse;
-import com.pfe.dto.SelectItemDTO;
 import com.pfe.dto.T24ChqResponse;
+import com.pfe.model.SelectItem;
 import com.pfe.model.T24Cheque;
 import com.pfe.repository.T24ChequeRepo;
 import com.pfe.sInterface.T24ChequeInterface;
@@ -288,8 +288,18 @@ public class T24ChequeService implements T24ChequeInterface {
 	        	        t24Cheque.setInexpoitableVerrou(inexploitableTabVerrou);
 	        	        t24Cheque.setVisDeForme(viceDeformeTab);
 	        	        t24Cheque.setVisDeFormeVerrou(viceDeformeTabVerrou);
-	        	        t24Cheque.setViceDeFormeSelectedItems(DictionaryProvider.getViseDeFormeDictionary(t24Cheque.getCodeVal().trim()));
-	        	        t24Cheque.setInexploitabeleSelectedItems(dictionaryProvider.getInexploitableDictionary(t24Cheque.getCodeVal().trim()));
+	        	        
+	        	        List<SelectItem> viceDeFormeItems = dictionaryProvider.getViseDeFormeDictionary(t24Cheque.getCodeVal().trim());
+	        	        viceDeFormeItems.forEach(selectItem -> selectItem.setT24Cheque(t24Cheque));
+	        	        t24Cheque.setViceDeFormeSelectedItems(viceDeFormeItems);
+
+	        	        List<SelectItem> inexploitableItems = dictionaryProvider.getInexploitableDictionary(t24Cheque.getCodeVal().trim());
+	        	        inexploitableItems.forEach(selectItem -> selectItem.setT24Cheque(t24Cheque));
+	        	        t24Cheque.setInexploitabeleSelectedItems(inexploitableItems);
+
+
+	        	        
+
 
 	        	    	this.numberChequeLoaded = count;
 	        	   
@@ -376,7 +386,7 @@ public class T24ChequeService implements T24ChequeInterface {
 	        t24Cheque.setInexpoitableVerrou(inexploitableTabVerrou);
 	        t24Cheque.setVisDeForme(viceDeformeTab);
 	        t24Cheque.setVisDeFormeVerrou(viceDeformeTabVerrou);
-	        t24Cheque.setViceDeFormeSelectedItems(DictionaryProvider.getViseDeFormeDictionary(t24Cheque.getCodeVal().trim()));
+	        t24Cheque.setViceDeFormeSelectedItems(dictionaryProvider.getViseDeFormeDictionary(t24Cheque.getCodeVal().trim()));
 	        t24Cheque.setInexploitabeleSelectedItems(dictionaryProvider.getInexploitableDictionary(t24Cheque.getCodeVal().trim()));
 
 
@@ -394,13 +404,13 @@ public class T24ChequeService implements T24ChequeInterface {
 	 public Map<String, Map<String, String>> getDecisionData() {
 		    Map<String, Map<String, String>> decisions = new HashMap<>();
 		    
-		    List<SelectItemDTO> visDeForme = dictionaryProvider.getViseDeFormeDictionary();
-		    List<SelectItemDTO> inexploitable = dictionaryProvider.getInexploitableDictionary();
+		    List<SelectItem> visDeForme = dictionaryProvider.getViseDeFormeDictionary();
+		    List<SelectItem> inexploitable = dictionaryProvider.getInexploitableDictionary();
 		    
 		    Map<String, String> visDeFormeMap = visDeForme.stream()
-		            .collect(Collectors.toMap(SelectItemDTO::getLabel, SelectItemDTO::getValue));
+		            .collect(Collectors.toMap(SelectItem::getLabel, SelectItem::getValue));
 		    Map<String, String> inexploitableMap = inexploitable.stream()
-		            .collect(Collectors.toMap(SelectItemDTO::getLabel, SelectItemDTO::getValue));
+		            .collect(Collectors.toMap(SelectItem::getLabel, SelectItem::getValue));
 		    
 		    decisions.put("visDeForme", visDeFormeMap);
 		    decisions.put("inexploitable", inexploitableMap);

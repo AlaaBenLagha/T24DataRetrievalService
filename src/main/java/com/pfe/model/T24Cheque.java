@@ -6,12 +6,15 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-import com.pfe.dto.SelectItemDTO;
+//import javax.persistence.Transient;
+
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -49,10 +52,10 @@ public class T24Cheque{
 	private String cloture;
 	private Integer[] visDeForme = new Integer[4];
 	private Integer[] inexpoitable = new Integer[4];
-	@Transient
-	private List<SelectItemDTO> viceDeFormeSelectedItems = new ArrayList<>();
-	@Transient
-	private List<SelectItemDTO> inexploitabeleSelectedItems = new ArrayList<>();
+	@OneToMany(mappedBy = "t24cheque", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SelectItem> viceDeFormeSelectedItems = new ArrayList<>();
+	@OneToMany(mappedBy = "t24cheque", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SelectItem> inexploitabeleSelectedItems = new ArrayList<>();
 	private String pathSignature;
 	private String dateImgNew;
 	private String ftDesionPai;
@@ -359,19 +362,19 @@ public class T24Cheque{
 		this.visDeFormeVerrou = visDeFormeVerrou;
 	}
 
-	public List<SelectItemDTO> getViceDeFormeSelectedItems() {
+	public List<SelectItem> getViceDeFormeSelectedItems() {
 		return viceDeFormeSelectedItems;
 	}
 
-	public void setViceDeFormeSelectedItems(List<SelectItemDTO> viceDeFormeSelectedItems) {
+	public void setViceDeFormeSelectedItems(List<SelectItem> viceDeFormeSelectedItems) {
 		this.viceDeFormeSelectedItems = viceDeFormeSelectedItems;
 	}
 
-	public List<SelectItemDTO> getInexploitabeleSelectedItems() {
+	public List<SelectItem> getInexploitabeleSelectedItems() {
 		return inexploitabeleSelectedItems;
 	}
 
-	public void setInexploitabeleSelectedItems(List<SelectItemDTO> inexploitabeleSelectedItems) {
+	public void setInexploitabeleSelectedItems(List<SelectItem> inexploitabeleSelectedItems) {
 		this.inexploitabeleSelectedItems = inexploitabeleSelectedItems;
 	}
 
