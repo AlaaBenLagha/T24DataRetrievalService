@@ -75,6 +75,11 @@ public class T24Cheque{
 	private Boolean isSelected =false;
 	
 	
+	
+	
+	
+	
+	
 		public void setCloture(String cloture) {
 			this.cloture = cloture;
 			updateNotifChq();
@@ -488,6 +493,12 @@ public class T24Cheque{
 
 	public String getDateImgNew() {
 		return dateImgNew;
+	}
+
+	public T24Cheque(String id, Integer statut) {
+		super();
+		this.id = id;
+		this.statut = statut;
 	}
 	
 	

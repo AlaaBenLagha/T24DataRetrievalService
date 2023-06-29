@@ -11,15 +11,14 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Collectors;
-
 import javax.persistence.EntityNotFoundException;
-
 import com.pfe.exceptions.NoDataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pfe.tools.T24Connector;
 import com.pfe.tools.T24FileStructureReader;
@@ -45,9 +44,15 @@ public class T24ChequeService implements T24ChequeInterface {
 	
 	@Autowired
 	private SimpMessagingTemplate template;
+	
+	@Autowired
+	private RestTemplate restTemplate;
 
 
 	public Integer numberChequeLoaded = 0;
+	
+	
+	
 	
 	
 	//optimse
@@ -61,6 +66,9 @@ public class T24ChequeService implements T24ChequeInterface {
 	
 	
 	
+
+
+
 
 	
 	
@@ -322,7 +330,7 @@ public class T24ChequeService implements T24ChequeInterface {
 
 	 
 	 
-
+	//need for checking data
 	// getOneChequeFromT24		( check deprecation for visedeformeTab et inexploitableTab later )
 	@SuppressWarnings("deprecation")
 	public T24Cheque getOneChequeFromT24(String t24today, String idCheque) throws Exception {
@@ -467,7 +475,26 @@ public class T24ChequeService implements T24ChequeInterface {
 
 
 
+			@Override
+			public T24Cheque saveone(T24Cheque cheque) {
+				return t24ChequeRepository.save(cheque);
+			}
+
+
+
+
+			public T24Cheque getOne(String id) {
+				return t24ChequeRepository.findById(id).orElse(null);
+			}
+			
+			
 		
-	
+
+			
+			
+			
+		
+
+
 
 }

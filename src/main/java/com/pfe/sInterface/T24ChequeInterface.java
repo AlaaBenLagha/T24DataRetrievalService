@@ -2,6 +2,7 @@ package com.pfe.sInterface;
 
 import java.util.List;
 import java.util.Map;
+
 import com.pfe.model.T24Cheque;
 
 public interface T24ChequeInterface {
@@ -17,8 +18,10 @@ public interface T24ChequeInterface {
 	T24Cheque findById(String id);
 	public List<String> getImgSignature(String compte);
 	public List<String> getSignaturePaths(String id);
-	
+	T24Cheque saveone(T24Cheque cheque);
+	T24Cheque getOne(String id);
 	List<T24Cheque> getAllCheques();
+	
 
 	
 	
@@ -36,4 +39,5 @@ public interface T24ChequeInterface {
 //		T24Cheque getOneChequeFromT24(String t24today, String idCheque) throws NoDataException;	
 //		T24Cheque update(String id, Integer[] visDeForme, Integer[] inexploitable);
 //		List<T24Cheque> getListChequeFromT24(String t24today) throws Exception;
+	
 }

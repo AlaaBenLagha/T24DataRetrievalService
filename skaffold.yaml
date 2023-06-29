@@ -1,0 +1,15 @@
+apiVersion: skaffold/v1
+kind: Config
+build:
+  artifacts:
+  - image: t24-data-retrieval-app
+    docker:
+      dockerfile: Dockerfile
+  local: {}
+deploy:
+  kubectl:
+    manifests:
+    - secret.yaml
+    - config.yaml
+    - deploy.yaml
+

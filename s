@@ -7,12 +7,7 @@ spring.datasource.username=root
 spring.datasource.password=
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 spring.datasource.initialize=true
-
-
-
-
-
-
+spring.cloud.kubernetes.discovery.enabled=true
 
 # Hibernate
 spring.jpa.hibernate.ddl-auto=update
