@@ -14,6 +14,7 @@ public interface T24ChequeInterface {
 
 	public T24Cheque updateSelectedStatus(String id, boolean isSelected);
 	void save(T24Cheque cheque);
+	T24Cheque sveViseinex(T24Cheque cheque);
 	public String getRibTireurById(String id);
 	T24Cheque findById(String id);
 	public List<String> getImgSignature(String compte);

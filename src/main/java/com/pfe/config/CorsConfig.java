@@ -16,11 +16,5 @@ public class CorsConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/websocket-app").setAllowedOrigins("*").withSockJS();
     }
 
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
-                .allowedHeaders("*")
-                .allowCredentials(true);
-    }
+    
 }

@@ -37,9 +37,6 @@ public class SelectItem {
 	        this.value = value;
 	    }
 	    
-	    
-
-
 
 	    // Getters and setters
 	    public String getLabel() {
@@ -63,8 +60,7 @@ public class SelectItem {
 	    @JoinColumn(name = "t24cheque_id")
 	    private T24Cheque t24cheque;
 	    
-	
-	
+
 	    @JsonIgnore
 	    public void setT24Cheque(T24Cheque t24Cheque) {
 	        this.t24cheque = t24Cheque;
@@ -75,5 +71,6 @@ public class SelectItem {
 	        return t24cheque;
 	    }
 
+	    
 }
 

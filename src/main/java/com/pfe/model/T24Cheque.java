@@ -50,8 +50,11 @@ public class T24Cheque{
 	private boolean[] visDeFormeVerrou = new boolean[4];
 	private String opposition;
 	private String cloture;
-	private Integer[] visDeForme = new Integer[4];
-	private Integer[] inexpoitable = new Integer[4];
+	@ElementCollection
+	private List<Integer> visDeForme = new ArrayList<>();
+
+	@ElementCollection
+	private List<Integer> inexploitable = new ArrayList<>();
 	@OneToMany(mappedBy = "t24cheque", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SelectItem> viceDeFormeSelectedItems = new ArrayList<>();
 	@OneToMany(mappedBy = "t24cheque", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -76,7 +79,27 @@ public class T24Cheque{
 	
 	
 	
+	// test extraction paths //
+	private String signaturePath1;  // new field
+    private String signaturePath2;  // new field
 	
+    public String getSignaturePath1() {
+		return signaturePath1;
+	}
+
+	public void setSignaturePath1(String signaturePath1) {
+		this.signaturePath1 = signaturePath1;
+	}
+
+	public String getSignaturePath2() {
+		return signaturePath2;
+	}
+
+	public void setSignaturePath2(String signaturePath2) {
+		this.signaturePath2 = signaturePath2;
+	}
+	
+	// test extraction paths //
 	
 	
 	
@@ -283,12 +306,12 @@ public class T24Cheque{
 		this.inexploitableString = inexploitableString;
 	}
 
-	public Integer[] getVisDeForme() {
+	public List<Integer> getVisDeForme() {
 		return visDeForme;
 	}
 
 
-	public void setVisDeForme(Integer[] visDeForme) {
+	public void setVisDeForme(List<Integer> visDeForme) {
 		this.visDeForme = visDeForme;
 	}
 	
@@ -334,13 +357,13 @@ public class T24Cheque{
 
 	
 
-	public Integer[] getInexpoitable() {
-		return inexpoitable;
+	public List<Integer> getInexploitable() {
+		return inexploitable;
 	}
     
     
-	public void setInexploitable(Integer[] inexploitable) {
-	    this.inexpoitable = inexploitable;
+	public void setInexploitable(List<Integer> inexploitable) {
+	    this.inexploitable = inexploitable;
 	}
 
 	public boolean[] getInexpoitableVerrou() {
@@ -391,9 +414,6 @@ public class T24Cheque{
 		this.viewed = viewed;
 	}
 
-	public void setInexpoitable(Integer[] inexpoitable) {
-		this.inexpoitable = inexpoitable;
-	}
 
 
 
@@ -500,6 +520,8 @@ public class T24Cheque{
 		this.id = id;
 		this.statut = statut;
 	}
+
+	
 	
 	
 	

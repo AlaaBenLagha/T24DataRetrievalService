@@ -15,11 +15,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
+
+import com.pfe.dictionary.DictionaryProvider;
 import com.pfe.exceptions.NoDataException;
+import com.pfe.model.SelectItem;
 import com.pfe.model.T24Cheque;
 import com.pfe.sInterface.T24ChequeInterface;
 
@@ -36,6 +40,12 @@ public class T24ChequeController {
 	
 	@Autowired
     private T24ChequeInterface t24ChequeServiceI;
+	
+	
+	
+	
+
+
 	
 
 	
@@ -137,6 +147,20 @@ public class T24ChequeController {
             return new ResponseEntity<>(new HashMap<>(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    
+    
+    @PostMapping("/saveViseInex")
+    public ResponseEntity<T24Cheque> saveCheque(@RequestBody T24Cheque cheque) {
+      try {
+        T24Cheque savedCheque = t24ChequeServiceI.sveViseinex(cheque);
+        return new ResponseEntity<>(savedCheque, HttpStatus.OK);
+      } catch (Exception e) {
+        logger.error("Unable to save cheque", e);
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    }
+
     
     
     

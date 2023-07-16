@@ -45,8 +45,7 @@ public class DictionaryProvider {
 
     
     // take the key "CodeVal" as input return value "the text related to the key"
-    
-    //ViseDeForme
+   
     public List<SelectItem> getViseDeFormeDictionary(String code) {
         return Arrays.stream(code.split(" "))
                 .map(codeKey -> new SelectItem(codeKey, visDeForme.get(codeKey)))
@@ -54,8 +53,7 @@ public class DictionaryProvider {
     }
     
    
-    
-    //inexploitable
+
   public List<SelectItem> getInexploitableDictionary(String code) {
   return Arrays.stream(code.split(" "))
           .map(codeKey -> new SelectItem(codeKey, inexploitable.get(codeKey)))

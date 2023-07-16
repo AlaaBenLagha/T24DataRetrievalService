@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,25 +52,10 @@ public class T24ChequeService implements T24ChequeInterface {
 
 	public Integer numberChequeLoaded = 0;
 	
-	
-	
-	
-	
-	//optimse
-//	 @Autowired
-//	 private T24Connector t24Connector;
-	
-	
-	
-		@Autowired
-		private DictionaryProvider dictionaryProvider;
-	
-	
-	
 
-
-
-
+	@Autowired
+	private DictionaryProvider dictionaryProvider;
+	
 	
 	
 	public List<String> getSignaturePaths(String id) {
@@ -91,6 +77,9 @@ public class T24ChequeService implements T24ChequeInterface {
 	        } else {
 	            for (String ref : cheque.getRefSignature()) {
 	                String pathSignature = appName + "/signatures/" + ref;
+	                // testing : 
+	                //  on local   C:/Users/alaw-/Desktop/stages/Stage PFE 2K23 (Zitouna Bank)/Files/signatures/ref
+	                //   on kube   /data/Files/signatures/ref
 	                listPath.add(pathSignature);
 	            }
 	        }
@@ -172,11 +161,6 @@ public class T24ChequeService implements T24ChequeInterface {
 	    return listSignatures;
 	}
 
-
-
-
-	 
-	 
 
 	 // getListChequeFromT24  ( check deprecation for visedeforme later )
 	@SuppressWarnings("deprecation")
@@ -275,7 +259,6 @@ public class T24ChequeService implements T24ChequeInterface {
 	        	        String[] intVice;
 	        	        Integer[] viceDeformeTab = { 99, 99, 99, 99 };
 	        	        boolean[] viceDeformeTabVerrou = { false, false, false, false };
-	        	        
 	        	        if (t24Cheque.getViseDeformeString() != null && !t24Cheque.getViseDeformeString().isEmpty()) {
 	        	            intVice = t24Cheque.getViseDeformeString().trim().split(" ");
 	        	            for (int i = 0; i < intVice.length; i++) {
@@ -291,10 +274,9 @@ public class T24ChequeService implements T24ChequeInterface {
 	        	            }
 	        	        }
 	        	        
-	        	        
-	        	        t24Cheque.setInexpoitable(inexploitableTab);
+	        	        t24Cheque.setInexploitable(Arrays.asList(inexploitableTab));
+	        	        t24Cheque.setVisDeForme(Arrays.asList(viceDeformeTab));
 	        	        t24Cheque.setInexpoitableVerrou(inexploitableTabVerrou);
-	        	        t24Cheque.setVisDeForme(viceDeformeTab);
 	        	        t24Cheque.setVisDeFormeVerrou(viceDeformeTabVerrou);
 	        	        
 	        	        List<SelectItem> viceDeFormeItems = dictionaryProvider.getViseDeFormeDictionary(t24Cheque.getCodeVal().trim());
@@ -310,6 +292,7 @@ public class T24ChequeService implements T24ChequeInterface {
 
 
 	        	    	this.numberChequeLoaded = count;
+	        	    	t24ChequeRepository.saveAll(listT24Chq);
 	        	   
 
 	                  }
@@ -319,16 +302,9 @@ public class T24ChequeService implements T24ChequeInterface {
 	        e.printStackTrace();
 	    }
 
-	    t24ChequeRepository.saveAll(listT24Chq);
+	    
 	    return listT24Chq;
 	}
-
-
-
-
-
-
-	 
 	 
 	//need for checking data
 	// getOneChequeFromT24		( check deprecation for visedeformeTab et inexploitableTab later )
@@ -389,13 +365,19 @@ public class T24ChequeService implements T24ChequeInterface {
 	                }
 	            }
 	        }
-
-	        t24Cheque.setInexpoitable(inexploitableTab);
+	        
+	        t24Cheque.setInexploitable(Arrays.asList(inexploitableTab));
+	        t24Cheque.setVisDeForme(Arrays.asList(viceDeformeTab));
 	        t24Cheque.setInexpoitableVerrou(inexploitableTabVerrou);
-	        t24Cheque.setVisDeForme(viceDeformeTab);
 	        t24Cheque.setVisDeFormeVerrou(viceDeformeTabVerrou);
-	        t24Cheque.setViceDeFormeSelectedItems(dictionaryProvider.getViseDeFormeDictionary(t24Cheque.getCodeVal().trim()));
-	        t24Cheque.setInexploitabeleSelectedItems(dictionaryProvider.getInexploitableDictionary(t24Cheque.getCodeVal().trim()));
+	        
+	        List<SelectItem> viceDeFormeItems = dictionaryProvider.getViseDeFormeDictionary(t24Cheque.getCodeVal().trim());
+	        viceDeFormeItems.forEach(selectItem -> selectItem.setT24Cheque(t24Cheque));
+	        t24Cheque.setViceDeFormeSelectedItems(viceDeFormeItems);
+
+	        List<SelectItem> inexploitableItems = dictionaryProvider.getInexploitableDictionary(t24Cheque.getCodeVal().trim());
+	        inexploitableItems.forEach(selectItem -> selectItem.setT24Cheque(t24Cheque));
+	        t24Cheque.setInexploitabeleSelectedItems(inexploitableItems);
 
 
 	        
@@ -405,8 +387,6 @@ public class T24ChequeService implements T24ChequeInterface {
 	    return t24Cheque;
 	}
 
-
-	
 	
 	 // vise de forme + inexploitable lists
 	 public Map<String, Map<String, String>> getDecisionData() {
@@ -427,8 +407,6 @@ public class T24ChequeService implements T24ChequeInterface {
 		}
 
 
-
-
 	 public String getRibTireurById(String id) {
 	        String ribTireur = t24ChequeRepository.findRibTireurById(id);
 
@@ -440,8 +418,6 @@ public class T24ChequeService implements T24ChequeInterface {
 	        return ribTireur;
 	    }
 
-
-
 			
 			@Override
 			public void save(T24Cheque cheque) {
@@ -449,21 +425,16 @@ public class T24ChequeService implements T24ChequeInterface {
 				
 			}
 
-
-
-			 @Override
-			    public List<T24Cheque> getAllCheques() {
+			@Override
+			public List<T24Cheque> getAllCheques() {
 			        return t24ChequeRepository.findAll();
-			    }
-
-
+			}
 
 			@Override
 			public T24Cheque findById(String id) {
 
 				return t24ChequeRepository.findById(id).orElse(null);
 			}
-
 
 			@Override
 			public T24Cheque setSelected(String id, boolean selected) {
@@ -472,19 +443,17 @@ public class T24ChequeService implements T24ChequeInterface {
 			    return cheque;
 			}
 
-
-
-
 			@Override
 			public T24Cheque saveone(T24Cheque cheque) {
 				return t24ChequeRepository.save(cheque);
 			}
 
-
-
-
 			public T24Cheque getOne(String id) {
 				return t24ChequeRepository.findById(id).orElse(null);
+			}
+
+			public T24Cheque sveViseinex(T24Cheque cheque) {
+				 return t24ChequeRepository.save(cheque);
 			}
 			
 			
