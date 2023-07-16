@@ -10,50 +10,50 @@ spec:
   template:
     metadata:
       labels:
-        app: t24-data-retrieval-app  
+        app: t24-data-retrieval-app
     spec:
       containers:
-        - name: t24-data-retrieval-app
-          image: t24-data-retrieval-app
-          imagePullPolicy: Never
-          ports:
-            - containerPort: 8080     
-          env:
-            - name: SERVER_PORT
-              valueFrom:
-                secretKeyRef:
-                  name: t24-data-retrieval-secret
-                  key: server.port
-            - name: SPRING_DATASOURCE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: t24-data-retrieval-secret
-                  key: spring.datasource.url
-            - name: SPRING_DATASOURCE_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: t24-data-retrieval-secret
-                  key: spring.datasource.username
-            - name: SPRING_DATASOURCE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: t24-data-retrieval-secret
-                  key: spring.datasource.password
-                  
----
+      - name: t24-data-retrieval-app
+        image: t24-data-retrieval-app
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SERVER_PORT
+          valueFrom:
+            secretKeyRef:
+              name: t24-data-retrieval-secret
+              key: server.port
+        - name: SPRING_DATASOURCE_URL
+          valueFrom:
+            secretKeyRef:
+              name: t24-data-retrieval-secret
+              key: spring.datasource.url
+        - name: SPRING_DATASOURCE_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: t24-data-retrieval-secret
+              key: spring.datasource.username
+        - name: SPRING_DATASOURCE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: t24-data-retrieval-secret
+              key: spring.datasource.password
 
+
+---
 apiVersion: v1
-kind: Services
+kind: Service
 metadata:
-  name: t24-data-retrieval-service 
+  name: t24-data-retrieval-service
 spec:
-  type : ClusterIP
+  type: NodePort
   selector:
     app: t24-data-retrieval-app
-  
   ports:
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
+  - protocol: TCP
+    port: 8085
+    targetPort: 8080
+    nodePort: 31111
 
 
